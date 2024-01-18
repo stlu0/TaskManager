@@ -1,0 +1,2 @@
+E:\repo\TaskManager\bin\Release\net6.0\publish\win-x64\TaskManager.pdb
+E:\repo\TaskManager\bin\Release\net6.0\publish\win-x64\TaskManager.exe

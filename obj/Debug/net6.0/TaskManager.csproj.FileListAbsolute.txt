@@ -1,0 +1,15 @@
+E:\repo\TaskManager\bin\Debug\net6.0\TaskManager.exe
+E:\repo\TaskManager\bin\Debug\net6.0\TaskManager.deps.json
+E:\repo\TaskManager\bin\Debug\net6.0\TaskManager.runtimeconfig.json
+E:\repo\TaskManager\bin\Debug\net6.0\TaskManager.dll
+E:\repo\TaskManager\bin\Debug\net6.0\TaskManager.pdb
+E:\repo\TaskManager\obj\Debug\net6.0\TaskManager.csproj.AssemblyReference.cache
+E:\repo\TaskManager\obj\Debug\net6.0\TaskManager.GeneratedMSBuildEditorConfig.editorconfig
+E:\repo\TaskManager\obj\Debug\net6.0\TaskManager.AssemblyInfoInputs.cache
+E:\repo\TaskManager\obj\Debug\net6.0\TaskManager.AssemblyInfo.cs
+E:\repo\TaskManager\obj\Debug\net6.0\TaskManager.csproj.CoreCompileInputs.cache
+E:\repo\TaskManager\obj\Debug\net6.0\TaskManager.dll
+E:\repo\TaskManager\obj\Debug\net6.0\refint\TaskManager.dll
+E:\repo\TaskManager\obj\Debug\net6.0\TaskManager.pdb
+E:\repo\TaskManager\obj\Debug\net6.0\TaskManager.genruntimeconfig.cache
+E:\repo\TaskManager\obj\Debug\net6.0\ref\TaskManager.dll
