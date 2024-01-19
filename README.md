@@ -23,7 +23,7 @@ The GUI is currently in Polish, and there are plans to implement language custom
 ## Command Line Arguments
 
 - Use `-d` to display tasks sorted by deadline.
-- Use `-p` to display tasks sorted by priority.
+- Use `-w` to display tasks sorted by priority.
 
 ## Technologies Used
 
@@ -31,4 +31,4 @@ The GUI is currently in Polish, and there are plans to implement language custom
 - .NET
 - JSON Serialization
 
-The self-contained executable file can be found in \bin\Release\net6.0\publish\win-x64\TaskManager.exe
+The self-contained executable file can be found in `\bin\Release\net6.0\publish\win-x64\TaskManager.exe`
