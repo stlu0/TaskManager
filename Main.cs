@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using System.Globalization;
 
 class TaskManager
 {
@@ -15,12 +16,12 @@ class TaskManager
 
     class Task
     {
-        public int Id {get; set;}
-        public string Name {get; set;}
-        public string Description {get; set;}
-        public int Priority {get; set;}
-        public DateTime Deadline {get; set;}
-        public DateTime CreationDate {get; set;}
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public int Priority { get; set; }
+        public DateTime Deadline { get; set; }
+        public DateTime CreationDate { get; set; }
     }
 
     static TaskData taskData;
@@ -28,8 +29,8 @@ class TaskManager
     static void Main(string[] args)
     {
 
-        ParseCommandArguments(args);
-        LoadTaskDataFromFile();
+        ParseArguments(args);
+        LoadData();
 
         while (true)
         {
@@ -39,7 +40,7 @@ class TaskManager
             Console.WriteLine("1. Dodaj zadanie");
             Console.WriteLine("2. Usuń zadanie");
             Console.WriteLine("3. Opcje zadań");
-            Console.WriteLine("4. Wyświetl zadania (-d, -p)");
+            Console.WriteLine("4. Wyświetl zadania (-d, -w)");
             Console.WriteLine("0. Wyjdź i zapisz");
             Console.WriteLine();
             Console.Write("Wybór [1-4]: ");
@@ -49,17 +50,17 @@ class TaskManager
             {
                 DisplayTasks(sortedByDeadline: true);
             }
-            
-            else if (choice.StartsWith("4 -p"))
+
+            else if (choice.StartsWith("4 -w"))
             {
                 DisplayTasks(sortedByPriority: true);
             }
-            
+
             else if (choice == "4")
             {
                 DisplayTasks();
             }
-            
+
             else
             {
                 ProcessChoice(choice);
@@ -67,13 +68,13 @@ class TaskManager
         }
     }
 
-    static void ParseCommandArguments(string[] args)
+    static void ParseArguments(string[] args)
     {
         if (args.Contains("-d"))
         {
             taskData.Tasks = taskData.Tasks.OrderBy(t => t.Deadline).ToList();
         }
-        
+
         else if (args.Contains("-w"))
         {
             taskData.Tasks = taskData.Tasks.OrderByDescending(t => t.Priority).ToList();
@@ -91,10 +92,10 @@ class TaskManager
                 RemoveTask();
                 break;
             case "3":
-                ShowUpdateTaskMenu();
+                ShowUpdateMenu();
                 break;
             case "0":
-                SaveTaskDataToFile();
+                SaveData();
                 Environment.Exit(0);
                 break;
             default:
@@ -105,33 +106,33 @@ class TaskManager
         }
     }
 
-    static void LoadTaskDataFromFile()
+    static void LoadData()
     {
         try
         {
             string json = File.ReadAllText("tasks.json");
             taskData = JsonSerializer.Deserialize<TaskData>(json);
         }
-        
+
         catch (FileNotFoundException)
         {
             taskData = new TaskData { Tasks = new List<Task>(), TaskIdCounter = 1 };
         }
-        
+
         catch (Exception ex)
         {
             Console.WriteLine($"Error: {ex.Message}");
         }
     }
 
-    static void SaveTaskDataToFile()
+    static void SaveData()
     {
         try
         {
             string json = JsonSerializer.Serialize(taskData);
             File.WriteAllText("tasks.json", json);
         }
-        
+
         catch (Exception ex)
         {
             Console.WriteLine($"Error: {ex.Message}");
@@ -149,12 +150,12 @@ class TaskManager
         {
             Console.WriteLine("Posortowano po Deadline");
         }
-        
+
         else if (sortedByPriority)
         {
             Console.WriteLine("Posortowano po Stopień Ważności");
         }
-        
+
         else
         {
             Console.WriteLine();
@@ -166,7 +167,7 @@ class TaskManager
         {
             displayedTasks = displayedTasks.OrderBy(t => t.Deadline).ToList();
         }
-        
+
         else if (sortedByPriority)
         {
             displayedTasks = displayedTasks.OrderByDescending(t => t.Priority).ToList();
@@ -186,7 +187,7 @@ class TaskManager
                 Console.WriteLine();
             }
         }
-        
+
         else
         {
             Console.WriteLine("Brak zaplanowanych zadań.");
@@ -207,12 +208,12 @@ class TaskManager
 
         while (true)
         {
-            Console.Write("Stopień ważnosci [1-5]: ");
+            Console.Write("Stopień ważności [1-5]: ");
             if (int.TryParse(Console.ReadLine(), out priority) && priority >= 1 && priority <= 5)
             {
                 break;
             }
-            
+
             else
             {
                 Console.Clear();
@@ -227,44 +228,17 @@ class TaskManager
             Console.Write("Deadline (dd-MM-yyyy): ");
             string input = Console.ReadLine();
 
-            if (TryParseCustomDateFormat(input, out deadline))
+            if (DateTime.TryParseExact(input, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out deadline))   // ???
             {
                 break;
             }
             else
             {
                 Console.Clear();
-                Console.WriteLine("Invalid date format. Please enter the date in the format dd-MM-yyyy.");
+                Console.WriteLine("Nieprawidłowy format daty. Wprowadź datę w formacie dd-MM-yyyy.");
             }
         }
 
-        bool TryParseCustomDateFormat(string input, out DateTime result)
-        {
-            result = DateTime.MinValue;
-            string[] dateParts = input.Split('-');
-
-            if (dateParts.Length == 3)
-            {
-                int day, month, year;
-
-                if (int.TryParse(dateParts[0], out day) &&
-                    int.TryParse(dateParts[1], out month) &&
-                    int.TryParse(dateParts[2], out year))
-                {
-
-                    try
-                    {
-                        result = new DateTime(year, month, day);
-                        return true;
-                    }
-                    catch (Exception)
-                    {
-                    }
-                }
-            }
-
-            return false;
-        }
 
         Task newTask = new Task
         {
@@ -308,7 +282,7 @@ class TaskManager
         }
     }
 
-    static void ShowUpdateTaskMenu()
+    static void ShowUpdateMenu()
     {
         Console.Clear();
 
@@ -444,7 +418,7 @@ class TaskManager
                 }
             }
         }
-        
+
         else
         {
             Console.Clear();
@@ -462,20 +436,20 @@ class TaskManager
         {
             try
             {
-                Console.Write("Nowy deadline (yyyy-MM-dd): ");
+                Console.Write("Nowy deadline (dd-mm-yyyy): ");
                 taskToUpdate.Deadline = DateTime.Parse(Console.ReadLine());
                 Console.Clear();
                 Console.WriteLine($"Deadline zadania ID {taskToUpdate.Id} został zmieniony.");
                 Console.WriteLine();
             }
-            
+
             catch (FormatException)
             {
                 Console.Clear();
                 Console.WriteLine("Nieprawidłowy format daty. Wprowadź datę w formacie yyyy-MM-dd.");
                 Console.WriteLine();
             }
-            
+
             catch (Exception ex)
             {
                 Console.Clear();
@@ -483,7 +457,7 @@ class TaskManager
                 Console.WriteLine();
             }
         }
-        
+
         else
         {
             Console.Clear();
@@ -492,3 +466,32 @@ class TaskManager
         }
     }
 }
+
+//    bool CustomDateFormat(string input, out DateTime result)
+//    {
+//        result = DateTime.MinValue;
+//        string[] dateParts = input.Split('-');
+
+//        if (dateParts.Length == 3)
+//        {
+//            int day, month, year;
+
+//            if (int.TryParse(dateParts[0], out day) &&
+//                int.TryParse(dateParts[1], out month) &&
+//                int.TryParse(dateParts[2], out year))
+//            {
+
+//                try
+//                {
+//                    result = new DateTime(year, month, day);
+//                    return true;
+//                }
+//                catch (Exception)
+//                {
+//                }
+//            }
+//        }
+
+//        return false;
+//    }
+
